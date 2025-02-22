@@ -96,21 +96,68 @@ const Tetris = () => {
       tabIndex="0"
       onKeyDown={e => move(e)}
       onKeyUp={keyUp}
+      onTouchStart={e => {
+        e.preventDefault(); // Prevent double-tap zoom
+      }}
     >
       <StyledTetris>
         <Stage stage={stage} />
         <aside>
-          {gameOver ? (
-            <Display gameOver={gameOver} text="Game Over" />
-          ) : (
-            <div>
-              <Display text={`Score: ${score}`} />
-              <Display text={`Rows: ${rows}`} />
-              <Display text={`Level: ${level}`} />
-            </div>
-          )}
-          <StartButton callback={startGame} />
+          <div>
+            {gameOver ? (
+              <Display gameOver={gameOver} text="Game Over" />
+            ) : (
+              <>
+                <Display text={`Score: ${score}`} />
+                <Display text={`Rows: ${rows}`} />
+                <Display text={`Level: ${level}`} />
+              </>
+            )}
+            <StartButton callback={startGame} />
+          </div>
         </aside>
+        <div className="mobile-controls">
+          <button 
+            className="left"
+            onTouchStart={(e) => {
+              e.preventDefault();
+              movePlayer(-1);
+            }}
+          >
+            ←
+          </button>
+          <button 
+            className="rotate"
+            onTouchStart={(e) => {
+              e.preventDefault();
+              playerRotate(stage, 1);
+            }}
+          >
+            ↻
+          </button>
+          <button 
+            className="right"
+            onTouchStart={(e) => {
+              e.preventDefault();
+              movePlayer(1);
+            }}
+          >
+            →
+          </button>
+          <button 
+            className="drop"
+            onTouchStart={(e) => {
+              e.preventDefault();
+              dropPlayer();
+            }}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              setDropTime(1000 / (level + 1) + 200);
+            }}
+          >
+            ↓
+          </button>
+        </div>
       </StyledTetris>
     </StyledTetrisWrapper>
   );
