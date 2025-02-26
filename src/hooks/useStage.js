@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { STAGE_WIDTH, STAGE_HEIGHT } from '../gameHelpers';
 
 export const createStage = () => 
-  Array.from(Array(20), () => 
-    new Array(12).fill([0, 'clear'])
+  Array.from(Array(STAGE_HEIGHT), () => 
+    new Array(STAGE_WIDTH).fill([0, 'clear'])
   );
 
 export const useStage = (player, resetPlayer) => {
@@ -33,10 +34,18 @@ export const useStage = (player, resetPlayer) => {
       player.tetromino.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value !== 0) {
-            newStage[y + player.pos.y][x + player.pos.x] = [
-              value,
-              `${player.collided ? 'merged' : 'clear'}`,
-            ];
+            // Check if the position is within bounds
+            if (
+              y + player.pos.y >= 0 && 
+              y + player.pos.y < STAGE_HEIGHT && 
+              x + player.pos.x >= 0 && 
+              x + player.pos.x < STAGE_WIDTH
+            ) {
+              newStage[y + player.pos.y][x + player.pos.x] = [
+                value,
+                `${player.collided ? 'merged' : 'clear'}`,
+              ];
+            }
           }
         });
       });
