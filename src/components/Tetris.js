@@ -178,12 +178,10 @@ const Tetris = () => {
         setLevel(0);
         setGameStarted(true);
 
-        // Focus the game area after a short delay to ensure the DOM has updated
-        setTimeout(() => {
-            if (gameAreaRef.current) {
-                gameAreaRef.current.focus();
-            }
-        }, 0);
+        // Focus the wrapper instead of the game area
+        if (wrapperRef.current) {
+            wrapperRef.current.focus();
+        }
     };
 
     const resetGame = () => {
@@ -220,7 +218,6 @@ const Tetris = () => {
 
     const keyUp = ({ keyCode }) => {
         if (!gameOver && gameStarted) {
-            // Only reset dropTime for down arrow key (40), not for space bar (32)
             if (keyCode === 40) {
                 setDropTime(1000 / (level + 1) + 200);
             }
@@ -234,18 +231,17 @@ const Tetris = () => {
         }
     };
 
-    const move = ({ keyCode }) => {
+    const move = ({ keyCode, key }) => {
         if (!gameOver && gameStarted) {
-            if (keyCode === 37) {
+            if (keyCode === 37) { // left arrow
                 movePlayer(-1);
-            } else if (keyCode === 39) {
+            } else if (keyCode === 39) { // right arrow
                 movePlayer(1);
-            } else if (keyCode === 40) {
+            } else if (keyCode === 40) { // down arrow
                 dropPlayer();
-            } else if (keyCode === 38) {
+            } else if (keyCode === 38) { // up arrow
                 playerRotate(stage, 1);
-            } else if (keyCode === 32) {
-                // Don't call dropPlayer for space bar, use hardDrop directly
+            } else if (key === 'd') {
                 hardDrop();
             }
         }
@@ -267,9 +263,8 @@ const Tetris = () => {
                 <div
                     className="game-area"
                     ref={gameAreaRef}
-                    tabIndex="0"
-                    onKeyDown={e => move(e)}
-                    onKeyUp={keyUp}
+                    style={{ outline: 'none' }}  // Prevent focus outline
+                    onKeyDown={e => e.preventDefault()}  // Prevent keyboard events
                 >
                     <Stage stage={stage} ghostPosition={ghostPosition} />
                 </div>
@@ -291,9 +286,10 @@ const Tetris = () => {
                         </div>
                     </div>
                     <div className="instructions">
-                        <p>Swipe left/right: Move</p>
-                        <p>Tap: Rotate</p>
-                        <p>Swipe down: Hard drop</p>
+                        <p>↑ Rotate piece</p>
+                        <p>← → Move horizontally</p>
+                        <p>↓ Soft drop</p>
+                        <p>d Quick drop</p>
                     </div>
                 </aside>
             </StyledTetris>

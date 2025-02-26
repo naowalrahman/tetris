@@ -221,4 +221,40 @@ export const StyledTetris = styled.div`
             }
         }
     }
+
+    .instructions {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 15px;
+        font-size: 0.85rem;
+        color: #fff;
+        transition: opacity 0.3s ease;
+
+        @media (min-width: 769px) {
+            position: relative;
+            opacity: 0.8;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            p {
+                margin: 8px 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+
+                &::before {
+                    content: '⌨️';
+                    font-size: 1.1em;
+                }
+            }
+        }
+
+        @media (max-width: 768px) {
+            display: none;
+        }
+    }
 `;
