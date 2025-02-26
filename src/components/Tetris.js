@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import { createStage, checkCollision } from '../gameHelpers';
 import { useInterval } from '../hooks/useInterval';
@@ -42,7 +42,6 @@ const Tetris = () => {
     
     const calculateGhostPosition = () => {
       let ghostY = player.pos.y;
-      let testPosition = { ...player.pos };
       
       while (!checkCollision(player, stage, { x: 0, y: ghostY - player.pos.y + 1 })) {
         ghostY++;
@@ -56,6 +55,26 @@ const Tetris = () => {
     
     calculateGhostPosition();
   }, [gameStarted, gameOver, player, stage]);
+
+  const movePlayer = useCallback(dir => {
+    if (!checkCollision(player, stage, { x: dir, y: 0 })) {
+      updatePlayerPos({ x: dir, y: 0 });
+    }
+  }, [player, stage, updatePlayerPos]);
+
+  const hardDrop = useCallback(() => {
+    if (!gameStarted || gameOver) return;
+    
+    let dropDistance = 0;
+    while (!checkCollision(player, stage, { x: 0, y: dropDistance + 1 })) {
+      dropDistance++;
+    }
+    
+    if (dropDistance > 0) {
+      updatePlayerPos({ x: 0, y: dropDistance, collided: true });
+      setDropTime(1000 / (level + 1) + 200);
+    }
+  }, [gameStarted, gameOver, player, stage, updatePlayerPos, level]);
 
   // Set up touch event handlers for gestures
   useEffect(() => {
@@ -141,13 +160,7 @@ const Tetris = () => {
       wrapper.removeEventListener('touchmove', handleTouchMove);
       wrapper.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [gameOver, gameStarted, stage]);
-
-  const movePlayer = dir => {
-    if (!checkCollision(player, stage, { x: dir, y: 0 })) {
-      updatePlayerPos({ x: dir, y: 0 });
-    }
-  };
+  }, [gameOver, gameStarted, hardDrop, movePlayer, playerRotate, stage]);
 
   const startGame = () => {
     // Reset everything
@@ -197,20 +210,6 @@ const Tetris = () => {
         setDropTime(null);
       }
       updatePlayerPos({ x: 0, y: 0, collided: true });
-    }
-  };
-
-  const hardDrop = () => {
-    if (!gameStarted || gameOver) return;
-    
-    let dropDistance = 0;
-    while (!checkCollision(player, stage, { x: 0, y: dropDistance + 1 })) {
-      dropDistance++;
-    }
-    
-    if (dropDistance > 0) {
-      updatePlayerPos({ x: 0, y: dropDistance, collided: true });
-      setDropTime(1000 / (level + 1) + 200);
     }
   };
 
