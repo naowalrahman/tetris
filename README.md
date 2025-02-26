@@ -20,6 +20,12 @@ Use the following controls to play the game:
 *   **Right Arrow:** Move the Tetromino right.
 *   **Up Arrow:** Rotate the Tetromino.
 *   **Down Arrow:** Soft drop the Tetromino (increase falling speed).
+*   **d:** Instant drop the Tetromino based on its current state.
+
+On mobile, you can use gestures:
+*   Swipe left or right to move the Tetromino horizontally.
+*   Swipe down to instnat drop the Tetromino.
+*   Tap the screen to rotate the Tetromino. 
 
 ## Getting Started
 
