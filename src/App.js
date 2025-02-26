@@ -11,10 +11,10 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const App = () => (
-  <div className="App">
-    <GlobalStyles />
-    <Tetris />
-  </div>
+    <div className="App">
+        <GlobalStyles />
+        <Tetris />
+    </div>
 );
 
 export default App;

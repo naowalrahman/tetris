@@ -1,22 +1,22 @@
 import { useEffect, useRef } from 'react';
 
 export const useInterval = (callback, delay) => {
-  const savedCallback = useRef();
+    const savedCallback = useRef();
 
-  // Remember the latest callback
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
+    // Remember the latest callback
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
 
-  // Set up the interval
-  useEffect(() => {
-    const tick = () => {
-      savedCallback.current();
-    };
+    // Set up the interval
+    useEffect(() => {
+        const tick = () => {
+            savedCallback.current();
+        };
 
-    if (delay !== null) {
-      const id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
+        if (delay !== null) {
+            const id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
 };
